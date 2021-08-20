@@ -110,7 +110,7 @@ public class JDBCController {
                 "INSERT INTO trucks (number, model, cargo_id) VALUES (4158, 'Mercedes-Benz Actros', 127);\n" +
                 "INSERT INTO trucks (number, model, cargo_id) VALUES (9371, 'MAZ-5440', 143);\n" +
                 "CREATE TABLE cargos (id int unique, title varchar(40), weight int);\n" +
-                "INSERT INTO cargos (id, title, weight) VALUES (113, 'Wood', 16400);\n" +
+                "INSERT INTO cargos (id, title, weight) VALUES (100, 'Wood', 16400);\n" +
                 "INSERT INTO cargos (id, title, weight) VALUES (127, 'Foam', 3770);\n" +
                 "INSERT INTO cargos (id, title, weight) VALUES (143, 'Equipment', 12750);";
 

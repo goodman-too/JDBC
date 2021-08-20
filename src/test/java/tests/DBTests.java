@@ -6,8 +6,7 @@ import org.junit.jupiter.api.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DBTests {
 
@@ -124,21 +123,67 @@ public class DBTests {
 
         //asserts first line
         assertAll("Should return selected data",
-                () -> assertEquals("Volvo FH16", resultSet.getString("model")),
-                () -> assertEquals("Wood", resultSet.getString("title")),
-                () -> assertEquals(16400 ,resultSet.getInt("weight")));
-        resultSet.next();
-        //asserts second line
-        assertAll("Should return selected data",
                 () -> assertEquals("Mercedes-Benz Actros", resultSet.getString("model")),
                 () -> assertEquals("Foam", resultSet.getString("title")),
                 () -> assertEquals(3770 ,resultSet.getInt("weight")));
         resultSet.next();
-        //asserts third line
+        //asserts second line
         assertAll("Should return selected data",
                 () -> assertEquals("MAZ-5440", resultSet.getString("model")),
                 () -> assertEquals("Equipment", resultSet.getString("title")),
                 () -> assertEquals(12750 ,resultSet.getInt("weight")));
+
+        //remove tables
+        query = "DROP TABLE trucks;";
+        JDBCController.executeSQL(query);
+        query = "DROP TABLE cargos;";
+        JDBCController.executeSQL(query);
+    }
+
+    @Test
+    @DisplayName("Left join test")
+    public void leftJoinTest() {
+        //create tables with records
+        JDBCController.createTablesForSelectJoinTest();
+
+        //select + join
+        String query = "SELECT trucks.model, cargos.title, cargos.weight " +
+                "FROM trucks " +
+                "LEFT JOIN cargos " +
+                "ON trucks.cargo_id=cargos.id;";
+        ResultSet resultSet = JDBCController.selectFromTable(query);
+
+        //asserts first line
+        assertAll("Should return selected data",
+                () -> assertEquals("Volvo FH16", resultSet.getString("model")),
+                () -> assertNull(resultSet.getString("title")),
+                () -> assertEquals(0 ,resultSet.getInt("weight")));
+
+        //remove tables
+        query = "DROP TABLE trucks;";
+        JDBCController.executeSQL(query);
+        query = "DROP TABLE cargos;";
+        JDBCController.executeSQL(query);
+    }
+
+    @Test
+    @DisplayName("Right join test")
+    public void rightJoinTest() {
+        //create tables with records
+        JDBCController.createTablesForSelectJoinTest();
+
+        //select + join
+        String query = "SELECT trucks.model, cargos.title, cargos.weight " +
+                "FROM trucks " +
+                "RIGHT JOIN cargos " +
+                "ON trucks.cargo_id=cargos.id;";
+        ResultSet resultSet = JDBCController.selectFromTable(query);
+
+        //asserts first line
+        assertAll("Should return selected data",
+                () -> assertNull(resultSet.getString("model")),
+                () -> assertEquals("Wood" ,resultSet.getString("title")),
+                () -> assertEquals(16400 ,resultSet.getInt("weight")));
 
         //remove tables
         query = "DROP TABLE trucks;";
