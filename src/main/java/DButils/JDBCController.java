@@ -102,4 +102,22 @@ public class JDBCController {
         }
         return result;
     }
+
+    //можно сделать multiLineExecuteSQL(String query, String delimiter)
+    public static void createTablesForSelectJoinTest() {
+        String query = "CREATE TABLE trucks (number int UNIQUE, model varchar(20), cargo_id int UNIQUE);\n" +
+                "INSERT INTO trucks (number, model, cargo_id) VALUES (7456, 'Volvo FH16', 113);\n" +
+                "INSERT INTO trucks (number, model, cargo_id) VALUES (4158, 'Mercedes-Benz Actros', 127);\n" +
+                "INSERT INTO trucks (number, model, cargo_id) VALUES (9371, 'MAZ-5440', 143);\n" +
+                "CREATE TABLE cargos (id int unique, title varchar(40), weight int);\n" +
+                "INSERT INTO cargos (id, title, weight) VALUES (113, 'Wood', 16400);\n" +
+                "INSERT INTO cargos (id, title, weight) VALUES (127, 'Foam', 3770);\n" +
+                "INSERT INTO cargos (id, title, weight) VALUES (143, 'Equipment', 12750);";
+
+        String[] queries = query.split("\n");
+
+        for (String line : queries) {
+            JDBCController.executeSQL(line);
+        }
+    }
 }

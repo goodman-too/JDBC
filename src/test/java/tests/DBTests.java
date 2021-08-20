@@ -108,4 +108,42 @@ public class DBTests {
         //assert
         Assertions.assertNull(JDBCController.showTableLike("removeme"));
     }
+
+    @Test
+    @DisplayName("Select join test")
+    public void selectJoinTest() throws SQLException {
+        //create tables with records
+        JDBCController.createTablesForSelectJoinTest();
+
+        //select + join
+        String query = "SELECT trucks.model, cargos.title, cargos.weight " +
+                "FROM trucks " +
+                "JOIN cargos " +
+                "ON trucks.cargo_id=cargos.id;";
+        ResultSet resultSet = JDBCController.selectFromTable(query);
+
+        //asserts first line
+        assertAll("Should return selected data",
+                () -> assertEquals("Volvo FH16", resultSet.getString("model")),
+                () -> assertEquals("Wood", resultSet.getString("title")),
+                () -> assertEquals(16400 ,resultSet.getInt("weight")));
+        resultSet.next();
+        //asserts second line
+        assertAll("Should return selected data",
+                () -> assertEquals("Mercedes-Benz Actros", resultSet.getString("model")),
+                () -> assertEquals("Foam", resultSet.getString("title")),
+                () -> assertEquals(3770 ,resultSet.getInt("weight")));
+        resultSet.next();
+        //asserts third line
+        assertAll("Should return selected data",
+                () -> assertEquals("MAZ-5440", resultSet.getString("model")),
+                () -> assertEquals("Equipment", resultSet.getString("title")),
+                () -> assertEquals(12750 ,resultSet.getInt("weight")));
+
+        //remove tables
+        query = "DROP TABLE trucks;";
+        JDBCController.executeSQL(query);
+        query = "DROP TABLE cargos;";
+        JDBCController.executeSQL(query);
+    }
 }
